@@ -31,23 +31,23 @@
   "tools": [
     {
       "name": "pixelate_image",
-      "description": "Turn a photo or illustration into pixel art and save a PNG"
+      "description": "Turn a photo or illustration into pixel art: shrink it to a pixel grid, reduce it to a few colours (or a named palette) and save a PNG. Accepts a local PNG/JPEG path or an http(s) URL."
     },
     {
       "name": "extract_palette",
-      "description": "Extract the main colours of an image as hex codes and a .gpl palette"
+      "description": "Pull the main colours out of an image (median cut). Returns hex codes plus a GIMP/Aseprite .gpl palette."
     },
     {
       "name": "remap_palette",
-      "description": "Recolour pixel art to a named palette or hex list"
+      "description": "Recolour an existing pixel art image so every pixel uses a colour from the given palette (e.g. PICO-8 or Game Boy). Size is kept."
     },
     {
       "name": "upscale_pixel_art",
-      "description": "Upscale pixel art with nearest neighbour, no blur"
+      "description": "Scale pixel art up by a whole number with nearest neighbour, so pixels stay sharp (for previews, store pages or social posts)."
     },
     {
       "name": "list_palettes",
-      "description": "List the built-in palettes"
+      "description": "List the built-in pixel art palettes and their colours."
     }
   ],
   "keywords": [
