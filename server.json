@@ -1,0 +1,22 @@
+{
+  "$schema": "https://static.modelcontextprotocol.io/schemas/2025-12-11/server.schema.json",
+  "name": "io.github.comficker/pixel-art-mcp",
+  "description": "Turn images into pixel art, extract and remap palettes, and upscale sprites without blur.",
+  "repository": {
+    "url": "https://github.com/comficker/pixel-art-mcp",
+    "source": "github",
+    "id": "1442003074"
+  },
+  "version": "0.1.1",
+  "packages": [
+    {
+      "registryType": "npm",
+      "identifier": "simplepixelart-mcp",
+      "version": "0.1.1",
+      "transport": {
+        "type": "stdio"
+      }
+    }
+  ],
+  "websiteUrl": "https://simplepixelart.com/"
+}
