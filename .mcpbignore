@@ -1,0 +1,5 @@
+test/
+.git/
+*.mcpb
+server.json
+.gitignore

@@ -1,0 +1,71 @@
+{
+  "manifest_version": "0.2",
+  "name": "simplepixelart-mcp",
+  "display_name": "Pixel Art (SimplePixelArt)",
+  "version": "0.1.1",
+  "description": "Turn images into pixel art, extract and remap palettes, and upscale sprites without blur.",
+  "long_description": "Local pixel art tools for AI assistants: convert photos to pixel art with median-cut colours or palettes like PICO-8, Game Boy and ENDESGA 32, extract .gpl palettes, recolour sprites to a palette and upscale with nearest neighbour. Works on PNG and JPEG files or image URLs. No API keys.",
+  "author": {
+    "name": "Comficker",
+    "url": "https://simplepixelart.com/"
+  },
+  "homepage": "https://simplepixelart.com/",
+  "documentation": "https://github.com/comficker/pixel-art-mcp#readme",
+  "support": "https://github.com/comficker/pixel-art-mcp/issues",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/comficker/pixel-art-mcp"
+  },
+  "icon": "icon.png",
+  "server": {
+    "type": "node",
+    "entry_point": "src/index.js",
+    "mcp_config": {
+      "command": "node",
+      "args": [
+        "${__dirname}/src/index.js"
+      ],
+      "env": {}
+    }
+  },
+  "tools": [
+    {
+      "name": "pixelate_image",
+      "description": "Turn a photo or illustration into pixel art and save a PNG"
+    },
+    {
+      "name": "extract_palette",
+      "description": "Extract the main colours of an image as hex codes and a .gpl palette"
+    },
+    {
+      "name": "remap_palette",
+      "description": "Recolour pixel art to a named palette or hex list"
+    },
+    {
+      "name": "upscale_pixel_art",
+      "description": "Upscale pixel art with nearest neighbour, no blur"
+    },
+    {
+      "name": "list_palettes",
+      "description": "List the built-in palettes"
+    }
+  ],
+  "keywords": [
+    "pixel-art",
+    "palette",
+    "sprite",
+    "gamedev",
+    "image"
+  ],
+  "license": "MIT",
+  "compatibility": {
+    "platforms": [
+      "darwin",
+      "win32",
+      "linux"
+    ],
+    "runtimes": {
+      "node": ">=18.0.0"
+    }
+  }
+}
