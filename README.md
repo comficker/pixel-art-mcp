@@ -1,4 +1,4 @@
-# pixel-art-mcp
+# simplepixelart-mcp
 
 An [MCP](https://modelcontextprotocol.io) server that gives AI assistants (Claude, Cursor, Windsurf, VS Code…) real pixel art tools: turn any image into pixel art, extract a palette, recolour sprites to PICO-8 or Game Boy colours, and upscale without blur.
 
@@ -23,7 +23,7 @@ Add it to your MCP client config. For Claude Desktop (`claude_desktop_config.jso
   "mcpServers": {
     "pixel-art": {
       "command": "npx",
-      "args": ["-y", "pixel-art-mcp"]
+      "args": ["-y", "simplepixelart-mcp"]
     }
   }
 }
@@ -32,7 +32,7 @@ Add it to your MCP client config. For Claude Desktop (`claude_desktop_config.jso
 Claude Code:
 
 ```bash
-claude mcp add pixel-art -- npx -y pixel-art-mcp
+claude mcp add pixel-art -- npx -y simplepixelart-mcp
 ```
 
 Requires Node.js 18 or newer.
@@ -49,7 +49,7 @@ Ask your assistant things like:
 ## Use it as a library
 
 ```js
-import { loadImage, pixelate, saveImage } from 'pixel-art-mcp/src/pixel.js'
+import { loadImage, pixelate, saveImage } from 'simplepixelart-mcp/src/pixel.js'
 
 const img = await loadImage('photo.jpg')
 const { display, palette } = pixelate(img, { width: 64, palette: 'sweetie-16', scale: 8 })

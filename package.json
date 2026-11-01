@@ -1,9 +1,9 @@
 {
-  "name": "pixel-art-mcp",
+  "name": "simplepixelart-mcp",
   "version": "0.1.0",
   "description": "MCP server for pixel art: turn images into pixel art, extract and remap palettes (PICO-8, Game Boy, ENDESGA 32…), and upscale sprites without blur.",
   "type": "module",
-  "bin": { "pixel-art-mcp": "src/index.js" },
+  "bin": { "simplepixelart-mcp": "src/index.js" },
   "main": "src/pixel.js",
   "files": ["src", "README.md", "LICENSE"],
   "scripts": { "start": "node src/index.js", "test": "node test/run.js" },
