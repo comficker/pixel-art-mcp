@@ -104,7 +104,7 @@ const imageArgs = {
 const paletteHelp = `Palette name (${Object.keys(PALETTES).join(', ')}) or hex colours like "#1a1c2c,#5d275d"`
 
 function buildServer() {
-  const server = new McpServer({ name: 'simplepixelart-mcp', version: '0.1.1', websiteUrl: SITE })
+  const server = new McpServer({ name: 'simplepixelart-mcp', version: '0.1.2', websiteUrl: SITE })
 
   server.registerTool('pixelate_image', {
     title: 'Image to pixel art',

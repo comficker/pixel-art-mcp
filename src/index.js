@@ -9,7 +9,7 @@ import {
   PALETTES, loadImage, saveImage, pixelate, medianCut, downscale, remap, resolvePalette, upscale, usedColors, rgbToHex, toGpl,
 } from './pixel.js'
 
-const server = new McpServer({ name: 'simplepixelart-mcp', version: '0.1.1' })
+const server = new McpServer({ name: 'simplepixelart-mcp', version: '0.1.2' })
 
 /** Default output next to a local input (or in the temp dir for URLs). */
 function outPath(input, suffix, output) {

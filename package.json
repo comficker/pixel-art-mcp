@@ -1,6 +1,6 @@
 {
   "name": "simplepixelart-mcp",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "mcpName": "io.github.comficker/pixel-art-mcp",
   "description": "MCP server for pixel art: turn images into pixel art, extract and remap palettes (PICO-8, Game Boy, ENDESGA 32\u2026), and upscale sprites without blur.",
   "type": "module",
