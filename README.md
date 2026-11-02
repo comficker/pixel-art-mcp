@@ -37,6 +37,24 @@ claude mcp add pixel-art -- npx -y simplepixelart-mcp
 
 Requires Node.js 18 or newer.
 
+### Hosted (no install)
+
+A remote endpoint runs at `https://mcp.simplepixelart.com/mcp` (Streamable HTTP, no auth). Images go in as a public URL or base64 and come back as PNG. Limits: 4 MB / 2048x2048 input, 1024 px output, 20 requests a minute.
+
+```bash
+claude mcp add --transport http pixel-art https://mcp.simplepixelart.com/mcp
+```
+
+```json
+{
+  "mcpServers": {
+    "pixel-art": { "url": "https://mcp.simplepixelart.com/mcp" }
+  }
+}
+```
+
+To run the HTTP server yourself: `npm run start:http` (listens on `127.0.0.1:4020`, set `PORT` / `HOST` to change).
+
 ## Examples
 
 Ask your assistant things like:

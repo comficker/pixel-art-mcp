@@ -15,7 +15,9 @@
   ],
   "scripts": {
     "start": "node src/index.js",
-    "test": "node test/run.js"
+    "test": "node test/run.js",
+    "start:http": "node src/http.js",
+    "test:http": "node test/http.js"
   },
   "keywords": [
     "mcp",

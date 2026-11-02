@@ -37,21 +37,44 @@ export async function loadImage(input) {
   } else {
     buf = await readFile(input)
   }
+  return decodeImage(buf)
+}
+
+/** Width and height from the file header, without decoding (PNG and baseline/progressive JPEG). */
+export function imageSize(buf) {
+  if (buf[0] === 0x89 && buf[1] === 0x50) return { width: buf.readUInt32BE(16), height: buf.readUInt32BE(20) }
+  if (buf[0] === 0xff && buf[1] === 0xd8) {
+    for (let i = 2; i + 9 < buf.length;) {
+      if (buf[i] !== 0xff) { i++; continue }
+      const m = buf[i + 1]
+      if (m >= 0xc0 && m <= 0xcf && m !== 0xc4 && m !== 0xc8 && m !== 0xcc) return { width: buf.readUInt16BE(i + 7), height: buf.readUInt16BE(i + 5) }
+      i += 2 + buf.readUInt16BE(i + 2)
+    }
+  }
+  return null
+}
+
+/** Decode PNG or JPEG bytes. */
+export function decodeImage(buf) {
   if (buf[0] === 0x89 && buf[1] === 0x50) {
     const png = PNG.sync.read(buf)
-    return { width: png.width, height: png.height, data: new Uint8ClampedArray(png.data) }
+    return { width: png.width, height: png.height, data: new Uint8ClampedArray(png.data.buffer, png.data.byteOffset, png.data.length) }
   }
   if (buf[0] === 0xff && buf[1] === 0xd8) {
     const j = jpeg.decode(buf, { useTArray: true, formatAsRGBA: true })
-    return { width: j.width, height: j.height, data: new Uint8ClampedArray(j.data) }
+    return { width: j.width, height: j.height, data: new Uint8ClampedArray(j.data.buffer, j.data.byteOffset, j.data.length) }
   }
   throw new Error('Unsupported image format: only PNG and JPEG are supported.')
 }
 
-export async function saveImage(img, path) {
+export function encodePng(img) {
   const png = new PNG({ width: img.width, height: img.height })
   png.data = Buffer.from(img.data)
-  await writeFile(path, PNG.sync.write(png))
+  return PNG.sync.write(png)
+}
+
+export async function saveImage(img, path) {
+  await writeFile(path, encodePng(img))
   return path
 }
 

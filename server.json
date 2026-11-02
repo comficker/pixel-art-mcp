@@ -7,7 +7,7 @@
     "source": "github",
     "id": "1442003074"
   },
-  "version": "0.1.1",
+  "version": "0.1.2",
   "packages": [
     {
       "registryType": "npm",
@@ -18,5 +18,11 @@
       }
     }
   ],
-  "websiteUrl": "https://simplepixelart.com/"
+  "websiteUrl": "https://simplepixelart.com/",
+  "remotes": [
+    {
+      "type": "streamable-http",
+      "url": "https://mcp.simplepixelart.com/mcp"
+    }
+  ]
 }
