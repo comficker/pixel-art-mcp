@@ -4,6 +4,8 @@ An [MCP](https://modelcontextprotocol.io) server that gives AI assistants (Claud
 
 Runs locally, works on PNG and JPEG files or image URLs, no API keys, no native dependencies.
 
+Made by [SimplePixelArt](https://simplepixelart.com), a free pixel art editor for the browser and [Android](https://play.google.com/store/apps/details?id=com.simple.pixel.art).
+
 ## Tools
 
 | Tool | What it does |
