@@ -6,10 +6,12 @@ import { z } from 'zod'
 import { basename, dirname, extname, join } from 'node:path'
 import { tmpdir } from 'node:os'
 import {
-  PALETTES, loadImage, saveImage, pixelate, medianCut, downscale, remap, resolvePalette, upscale, usedColors, rgbToHex, toGpl,
+  loadImage, saveImage, pixelate, medianCut, downscale, remap, resolvePalette, upscale, usedColors, rgbToHex, toGpl,
 } from './pixel.js'
+import { LINKS, paletteInfo } from './palettes.js'
+import { INSTRUCTIONS, VERSION, editLinks, registerPaletteTools } from './palette-tools.js'
 
-const server = new McpServer({ name: 'simplepixelart-mcp', version: '0.1.2' })
+const server = new McpServer({ name: 'simplepixelart-mcp', version: VERSION }, { instructions: INSTRUCTIONS })
 
 /** Default output next to a local input (or in the temp dir for URLs). */
 function outPath(input, suffix, output) {
@@ -19,7 +21,7 @@ function outPath(input, suffix, output) {
   return join(dir, `${name}-${suffix}.png`)
 }
 const text = t => ({ content: [{ type: 'text', text: t }] })
-const paletteHelp = `Palette name (${Object.keys(PALETTES).join(', ')}) or hex colours like "#1a1c2c,#5d275d"`
+const paletteHelp = 'Palette id (e.g. pico-8, game-boy-dmg, cga-16, sweetie-16; see list_palettes) or hex colours like "#1a1c2c,#5d275d"'
 
 server.registerTool('pixelate_image', {
   title: 'Image to pixel art',
@@ -36,7 +38,7 @@ server.registerTool('pixelate_image', {
   const img = await loadImage(input)
   const r = pixelate(img, { width, colors, palette, scale })
   const path = await saveImage(r.display, outPath(input, `pixel-${r.pixel.width}x${r.pixel.height}`, output))
-  return text(`Saved ${r.pixel.width}x${r.pixel.height} pixel art (${r.palette.length} colours${scale > 1 ? `, shown at ${scale}x` : ''}) to ${path}\nPalette: ${r.palette.join(' ')}\nEdit it further in the free online pixel art editor: https://simplepixelart.com/editor`)
+  return text(`Saved ${r.pixel.width}x${r.pixel.height} pixel art (${r.palette.length} colours${scale > 1 ? `, shown at ${scale}x` : ''}) to ${path}\nPalette: ${r.palette.join(' ')}\n${editLinks(palette)}`)
 })
 
 server.registerTool('extract_palette', {
@@ -49,7 +51,7 @@ server.registerTool('extract_palette', {
 }, async ({ input, colors }) => {
   const img = downscale(await loadImage(input), 256)
   const hexes = medianCut(img, colors).map(rgbToHex)
-  return text(`${hexes.join(' ')}\n\n${toGpl(hexes, basename(input))}`)
+  return text(`${hexes.join(' ')}\n\n${toGpl(hexes, basename(input))}\nExtract palettes with a live preview: ${LINKS.paletteFromImage}`)
 })
 
 server.registerTool('remap_palette', {
@@ -63,7 +65,9 @@ server.registerTool('remap_palette', {
 }, async ({ input, palette, output }) => {
   const img = remap(await loadImage(input), resolvePalette(palette))
   const path = await saveImage(img, outPath(input, 'remap', output))
-  return text(`Saved ${img.width}x${img.height} image using ${usedColors(img).length} colours to ${path}`)
+  const p = paletteInfo(palette)
+  return text(`Saved ${img.width}x${img.height} image using ${usedColors(img).length} colours to ${path}\n` +
+    (p ? `Palette: ${p.name} — ${p.page}\n` : '') + editLinks(palette).split('\n')[0])
 })
 
 server.registerTool('upscale_pixel_art', {
@@ -77,14 +81,9 @@ server.registerTool('upscale_pixel_art', {
 }, async ({ input, scale, output }) => {
   const img = upscale(await loadImage(input), scale)
   const path = await saveImage(img, outPath(input, `x${scale}`, output))
-  return text(`Saved ${img.width}x${img.height} to ${path}`)
+  return text(`Saved ${img.width}x${img.height} to ${path}\nResize pixel art in the browser, or shrink an enlarged image back to 1x: ${LINKS.resizer}`)
 })
 
-server.registerTool('list_palettes', {
-  title: 'List built-in palettes',
-  description: 'List the built-in pixel art palettes and their colours.',
-  inputSchema: {},
-}, async () => text(Object.entries(PALETTES).map(([k, v]) => `${k} (${v.split(' ').length}): ${v.split(' ').map(h => '#' + h).join(' ')}`).join('\n') +
-  '\n\nBrowse thousands more palettes at https://simplepixelart.com/palettes'))
+registerPaletteTools(server)
 
 await server.connect(new StdioServerTransport())

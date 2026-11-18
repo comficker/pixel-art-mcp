@@ -5,13 +5,8 @@ import { readFile, writeFile } from 'node:fs/promises'
 import { PNG } from 'pngjs'
 import jpeg from 'jpeg-js'
 
-export const PALETTES = {
-  'pico-8': '000000 1D2B53 7E2553 008751 AB5236 5F574F C2C3C7 FFF1E8 FF004D FFA300 FFEC27 00E436 29ADFF 83769C FF77A8 FFCCAA',
-  'sweetie-16': '1A1C2C 5D275D B13E53 EF7D57 FFCD75 A7F070 38B764 257179 29366F 3B5DC9 41A6F6 73EFF7 F4F4F4 94B0C2 566C86 333C57',
-  'endesga-32': 'BE4A2F D77643 EAD4AA E4A672 B86F50 733E39 3E2731 A22633 E43B44 F77622 FEAE34 FEE761 63C74D 3E8948 265C42 193C3E 124E89 0099DB 2CE8F5 FFFFFF C0CBDC 8B9BB4 5A6988 3A4466 262B44 181425 FF0044 68386C B55088 F6757A E8B796 C28569',
-  'game-boy': '0F380F 306230 8BAC0F 9BBC0F',
-  '1-bit': '000000 FFFFFF',
-}
+import { PALETTES, paletteInfo } from './palettes.js'
+export { PALETTES }
 
 const hexToRgb = h => [0, 2, 4].map(i => parseInt(h.replace('#', '').slice(i, i + 2), 16))
 export const rgbToHex = c => '#' + c.map(v => v.toString(16).padStart(2, '0')).join('')
@@ -20,8 +15,8 @@ export const rgbToHex = c => '#' + c.map(v => v.toString(16).padStart(2, '0')).j
 export function resolvePalette(p) {
   if (!p) return null
   if (Array.isArray(p)) return p.map(hexToRgb)
-  const known = PALETTES[String(p).toLowerCase()]
-  if (known) return known.split(' ').map(hexToRgb)
+  const known = paletteInfo(p)
+  if (known) return known.colors.map(hexToRgb)
   const list = String(p).split(/[\s,]+/).filter(Boolean)
   if (list.every(h => /^#?[0-9a-f]{6}$/i.test(h))) return list.map(hexToRgb)
   throw new Error(`Unknown palette "${p}". Use one of ${Object.keys(PALETTES).join(', ')} or a list of hex colours.`)

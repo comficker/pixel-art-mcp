@@ -1,20 +1,28 @@
-# simplepixelart-mcp
+# Pixel Art MCP Server — image to pixel art for Claude, Cursor and VS Code
 
-An [MCP](https://modelcontextprotocol.io) server that gives AI assistants (Claude, Cursor, Windsurf, VS Code…) real pixel art tools: turn any image into pixel art, extract a palette, recolour sprites to PICO-8 or Game Boy colours, and upscale without blur.
+**English** · [简体中文](README.zh.md) · [Español](README.es.md) · [Português](README.pt.md) · [Русский](README.ru.md) · [한국어](README.ko.md) · [日本語](README.ja.md)
 
-Runs locally, works on PNG and JPEG files or image URLs, no API keys, no native dependencies.
+`simplepixelart-mcp` is an [MCP](https://modelcontextprotocol.io) server for pixel art. It lets an AI assistant (Claude, Cursor, Windsurf, VS Code…) convert an image to pixel art — a photo, a PNG or a screenshot — reduce its colors or map it to a PICO-8 or Game Boy palette, extract a palette, and upscale pixel art without blur for game assets and previews.
 
-Made by [SimplePixelArt](https://simplepixelart.com), a free pixel art editor for the browser and [Android](https://play.google.com/store/apps/details?id=com.simple.pixel.art).
+Free, runs locally, no API key and no native dependencies. Made by [SimplePixelArt](https://simplepixelart.com), whose [image to pixel art converter](https://simplepixelart.com/converter) and [online pixel art editor](https://simplepixelart.com/editor) do the same in the browser.
 
 ## Tools
 
-| Tool | What it does |
-|---|---|
-| `pixelate_image` | Image → pixel art. Shrinks to a pixel grid (e.g. 64 px wide), reduces to N colours with median cut or maps to a named palette, saves a PNG (optionally upscaled for preview). |
-| `extract_palette` | Pulls the main colours out of an image and returns hex codes plus a GIMP / Aseprite `.gpl` palette. |
-| `remap_palette` | Recolours existing pixel art so every pixel uses a palette colour — PICO-8, Sweetie 16, ENDESGA 32, Game Boy, 1-bit or your own hex list. |
-| `upscale_pixel_art` | Nearest-neighbour upscale by a whole number, so pixels stay sharp. |
-| `list_palettes` | Lists the built-in palettes. |
+| Tool | What it does | In the browser |
+|---|---|---|
+| `pixelate_image` | Image → pixel art. Shrinks to a pixel grid (e.g. 64 px wide), reduces to N colours with median cut or maps to a named palette, saves a PNG (optionally upscaled for preview). | [Image to pixel art converter](https://simplepixelart.com/converter) |
+| `extract_palette` | Pulls the main colours out of an image and returns hex codes plus a GIMP / Aseprite `.gpl` palette. | [Palette from image](https://simplepixelart.com/palettes/color-palette-from-image) |
+| `remap_palette` | Recolours existing pixel art so every pixel uses a palette colour — PICO-8, Game Boy, CGA, EGA, Sweetie 16 or your own hex list. | [Pixel art editor](https://simplepixelart.com/editor) |
+| `upscale_pixel_art` | Nearest-neighbour upscale by a whole number, so pixels stay sharp. | [Pixel art resizer](https://simplepixelart.com/pixel-art-resizer) |
+| `list_palettes` | Lists the built-in palettes. | [Palette library](https://simplepixelart.com/palettes) |
+| `get_palette` | One palette's colours as hex codes or a `.gpl` file. | [Palette library](https://simplepixelart.com/palettes) |
+| `search_palettes` | Finds built-in palettes by name or number of colours. | [Palette library](https://simplepixelart.com/palettes) |
+
+Results include a link to keep working in the browser editor — with the palette preloaded when it has a page on SimplePixelArt.
+
+## Palettes
+
+PICO-8, Game Boy (DMG and Pocket), CGA 16 and both CGA mode 4 palettes, EGA 64, RGB 3-3-2, web-safe 216, 1-bit, grayscale 4/8/16 and primary 8 come from [pixel-art-palettes](https://github.com/comficker/pixel-art-palettes) (CC BY 4.0), which also ships them as JSON, CSV and `.gpl` files. [Sweetie 16](https://lospec.com/palette-list/sweetie-16) is by GrafxKid and [ENDESGA 32](https://lospec.com/palette-list/endesga-32) by ENDESGA. `game-boy` still works as a name for `game-boy-dmg`.
 
 ## Install
 
@@ -86,6 +94,10 @@ The tools get you a clean starting grid; the fun part is fixing it by hand. Open
 npm install
 npm test        # starts the server over stdio and calls every tool
 ```
+
+## About SimplePixelArt
+
+[SimplePixelArt](https://simplepixelart.com) is a free pixel art maker for the browser and [Android](https://play.google.com/store/apps/details?id=com.simple.pixel.art): layers, animation, a [sprite maker](https://simplepixelart.com/sprite-maker), a [tileset editor](https://simplepixelart.com/tilesets/editor) with Godot and Tiled export, [pixel art color palettes](https://simplepixelart.com/palettes), and a community gallery where every piece can be opened and remixed.
 
 ## License
 

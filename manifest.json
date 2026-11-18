@@ -2,7 +2,7 @@
   "manifest_version": "0.2",
   "name": "simplepixelart-mcp",
   "display_name": "Pixel Art (SimplePixelArt)",
-  "version": "0.1.2",
+  "version": "0.2.0",
   "description": "Turn images into pixel art, extract and remap palettes, and upscale sprites without blur.",
   "long_description": "Local pixel art tools for AI assistants: convert photos to pixel art with median-cut colours or palettes like PICO-8, Game Boy and ENDESGA 32, extract .gpl palettes, recolour sprites to a palette and upscale with nearest neighbour. Works on PNG and JPEG files or image URLs. No API keys.",
   "author": {
@@ -47,7 +47,15 @@
     },
     {
       "name": "list_palettes",
-      "description": "List the built-in pixel art palettes and their colours."
+      "description": "List the built-in palettes (PICO-8, Game Boy, CGA, EGA, Sweetie 16 and more)."
+    },
+    {
+      "name": "get_palette",
+      "description": "The colours of a built-in palette as hex codes or a GIMP/Aseprite .gpl file."
+    },
+    {
+      "name": "search_palettes",
+      "description": "Find built-in palettes by name or number of colours."
     }
   ],
   "keywords": [

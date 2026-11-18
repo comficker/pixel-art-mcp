@@ -11,8 +11,10 @@ import { BlockList, isIP } from 'node:net'
 import { McpServer } from '@modelcontextprotocol/sdk/server/mcp.js'
 import { StreamableHTTPServerTransport } from '@modelcontextprotocol/sdk/server/streamableHttp.js'
 import { z } from 'zod'
+import { LINKS, paletteInfo } from './palettes.js'
+import { INSTRUCTIONS, VERSION, editLinks, registerPaletteTools } from './palette-tools.js'
 import {
-  PALETTES, decodeImage, encodePng, imageSize, pixelate, medianCut, downscale, remap, resolvePalette, upscale, usedColors, rgbToHex, toGpl,
+  decodeImage, encodePng, imageSize, pixelate, medianCut, downscale, remap, resolvePalette, upscale, usedColors, rgbToHex, toGpl,
 } from './pixel.js'
 
 const PORT = Number(process.env.PORT || 4020)
@@ -101,10 +103,10 @@ const imageArgs = {
   image_url: z.string().url().optional().describe('Public http(s) URL of a PNG or JPEG (max 4 MB, 2048x2048)'),
   image_base64: z.string().optional().describe('PNG or JPEG as base64 (or a data: URL), if there is no public URL'),
 }
-const paletteHelp = `Palette name (${Object.keys(PALETTES).join(', ')}) or hex colours like "#1a1c2c,#5d275d"`
+const paletteHelp = 'Palette id (e.g. pico-8, game-boy-dmg, cga-16, sweetie-16; see list_palettes) or hex colours like "#1a1c2c,#5d275d"'
 
 function buildServer() {
-  const server = new McpServer({ name: 'simplepixelart-mcp', version: '0.1.2', websiteUrl: SITE })
+  const server = new McpServer({ name: 'simplepixelart-mcp', version: VERSION, websiteUrl: SITE }, { instructions: INSTRUCTIONS })
 
   server.registerTool('pixelate_image', {
     title: 'Image to pixel art',
@@ -120,7 +122,7 @@ function buildServer() {
     const r = pixelate(await readInput(input), { width, colors, palette })
     const s = fitScale(r.pixel, scale)
     return png(s > 1 ? upscale(r.pixel, s) : r.pixel,
-      `${r.pixel.width}x${r.pixel.height} pixel art, ${r.palette.length} colours${s > 1 ? `, shown at ${s}x` : ''}.\nPalette: ${r.palette.join(' ')}\nEdit it further in the free online pixel art editor: ${EDITOR}`)
+      `${r.pixel.width}x${r.pixel.height} pixel art, ${r.palette.length} colours${s > 1 ? `, shown at ${s}x` : ''}.\nPalette: ${r.palette.join(' ')}\n${editLinks(palette)}`)
   })
 
   server.registerTool('extract_palette', {
@@ -129,7 +131,7 @@ function buildServer() {
     inputSchema: { ...imageArgs, colors: z.number().int().min(2).max(64).default(8).describe('How many colours to extract') },
   }, async ({ colors, ...input }) => {
     const hexes = medianCut(downscale(await readInput(input), 256), colors).map(rgbToHex)
-    return { content: [{ type: 'text', text: `${hexes.join(' ')}\n\n${toGpl(hexes, 'Extracted')}\nMore palettes: https://simplepixelart.com/palettes` }] }
+    return { content: [{ type: 'text', text: `${hexes.join(' ')}\n\n${toGpl(hexes, 'Extracted')}\nExtract palettes with a live preview: ${LINKS.paletteFromImage}` }] }
   })
 
   server.registerTool('remap_palette', {
@@ -139,7 +141,9 @@ function buildServer() {
   }, async ({ palette, ...input }) => {
     const src = await readInput(input)
     const img = remap(src.width > MAX_OUT || src.height > MAX_OUT ? downscale(src, MAX_OUT) : src, resolvePalette(palette))
-    return png(img, `${img.width}x${img.height}, ${usedColors(img).length} colours. Open it in ${EDITOR} to touch it up.`)
+    const p = paletteInfo(palette)
+    return png(img, `${img.width}x${img.height}, ${usedColors(img).length} colours.\n` +
+      (p ? `Palette: ${p.name} — ${p.page}\n` : '') + editLinks(palette).split('\n')[0])
   })
 
   server.registerTool('upscale_pixel_art', {
@@ -151,20 +155,10 @@ function buildServer() {
     const s = fitScale(src, scale)
     if (s < 2) throw new Error('Image is already 512 px or larger; nothing to upscale within the 1024 px limit.')
     const img = upscale(src, s)
-    return png(img, `${img.width}x${img.height} (${s}x). Made with ${SITE}`)
+    return png(img, `${img.width}x${img.height} (${s}x).\nResize pixel art in the browser, or shrink an enlarged image back to 1x: ${LINKS.resizer}`)
   })
 
-  server.registerTool('list_palettes', {
-    title: 'List built-in palettes',
-    description: 'List the built-in pixel art palettes and their colours.',
-    inputSchema: {},
-  }, async () => ({
-    content: [{
-      type: 'text',
-      text: Object.entries(PALETTES).map(([k, v]) => `${k} (${v.split(' ').length}): ${v.split(' ').map(h => '#' + h).join(' ')}`).join('\n') +
-        '\n\nBrowse thousands more palettes at https://simplepixelart.com/palettes',
-    }],
-  }))
+  registerPaletteTools(server)
 
   return server
 }

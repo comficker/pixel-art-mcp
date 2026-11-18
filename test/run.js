@@ -38,6 +38,19 @@ t = await call('upscale_pixel_art', { input: join(dir, 'c.png'), scale: 2, outpu
 console.log('upscale:', t)
 console.log((await call('list_palettes', {})).split('\n')[0])
 
+t = await call('get_palette', { id: 'cga-16' })
+if (!t.includes('#AA5500') || !t.includes('simplepixelart.com/editor?palette=')) throw new Error('get_palette: ' + t)
+t = await call('get_palette', { id: 'sweetie-16', format: 'gpl' })
+if (!t.startsWith('GIMP Palette')) throw new Error('get_palette gpl')
+t = await call('search_palettes', { query: 'game boy' })
+console.log('search:', t.split('\n').slice(0, 2).join(' | '))
+if (!t.includes('game-boy-dmg')) throw new Error('search_palettes')
+t = await call('search_palettes', { colors: 64 })
+if (!t.includes('ega-64')) throw new Error('search by count')
+
+const info = client.getInstructions()
+if (!info || !info.includes('simplepixelart.com')) throw new Error('instructions missing')
+
 const bad = await client.callTool({ name: 'remap_palette', arguments: { input: 'test/sample.png', palette: 'nope' } })
 console.log('bad palette isError:', bad.isError, '|', bad.content[0].text.slice(0, 60))
 await client.close()
